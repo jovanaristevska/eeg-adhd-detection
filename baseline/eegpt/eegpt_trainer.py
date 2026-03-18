@@ -56,6 +56,9 @@ class EegptTrainer(AbstractTrainer):
     """
     EEGPT trainer that inherits from AbstractTrainer.
     """
+
+    def is_dist(self):
+        return torch.distributed.is_available() and torch.distributed.is_initialized()
     
     def __init__(self, cfg: EegptConfig):
         super().__init__(cfg)
@@ -151,9 +154,15 @@ class EegptTrainer(AbstractTrainer):
         
         model = model.to(self.device)
 
-        model = torch.nn.parallel.DistributedDataParallel(
-            model, device_ids=[self.local_rank], find_unused_parameters=True
-        )
+        if self.is_dist():
+            model = torch.nn.parallel.DistributedDataParallel(
+                model,
+                device_ids=[self.local_rank] if torch.cuda.is_available() else None,
+                output_device=self.local_rank if torch.cuda.is_available() else None,
+                find_unused_parameters=True
+            )
+        else:
+            logger.info("Running in single-process mode (no DDP)")
 
         self.model = model
 

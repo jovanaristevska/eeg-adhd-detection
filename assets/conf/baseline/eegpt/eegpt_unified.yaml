@@ -12,9 +12,7 @@ data:
   batch_size: 32
   num_workers: 1
   datasets:
-    tuab: 'finetune'
-    seed: 'finetune_sub_dependent'
-    hmc: 'finetune'
+    adhd: 'finetune'
     # ...
 
 

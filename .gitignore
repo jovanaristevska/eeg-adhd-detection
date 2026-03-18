@@ -9,6 +9,7 @@ wandb
 env/
 venv/
 ENV/
+eeg_env/
 
 *.lock
 *.pyc
@@ -19,3 +20,16 @@ data.lock
 *.pt
 *.ckpt
 *.pth
+
+# Data files — too large for GitHub
+assets/data/
+*.csv
+*.parquet
+*.arrow
+*.done
+
+# Logs and run outputs
+assets/run/
+
+# Summary files generated during preprocessing
+*/summary/
