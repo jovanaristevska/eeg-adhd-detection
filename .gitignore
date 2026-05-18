@@ -1,0 +1,63 @@
+.idea/
+.cache/
+.vscode/
+__pycache__/
+wandb
+
+.venv/
+.conda/
+env/
+venv/
+ENV/
+eeg_env/
+dashboard_env/
+
+*.lock
+*.pyc
+*.bak
+*$py.class
+data.lock
+*.pdf
+*.pt
+*.ckpt
+*.pth
+
+# Data files — too large for GitHub
+assets/data/
+*.csv
+*.parquet
+*.arrow
+*.done
+
+
+# Logs and run outputs
+assets/run/
+
+# Summary files generated during preprocessing
+*/summary/
+
+# Large model files
+*.bin
+*.safetensors
+
+# Build / cache
+build/
+dist/
+*.egg-info/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Torch / CUDA cache
+torch_extensions/
+
+# HuggingFace cache
+.cache/huggingface/
+
+# Temporary files
+tmp/
+temp/
