@@ -31,7 +31,7 @@ model:
   dropout: 0.1
   
   # Влезни параметри
-  chunk_len: 500               # должина на прозорец
+  chunk_len: 512               # должина на прозорец
   num_chunks: 2                # број на прозорци
   chunk_ovlp: 0                # преклопување
   ft_only_encoder: true        # финтун само на encoder

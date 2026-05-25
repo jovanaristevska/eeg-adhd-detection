@@ -1478,23 +1478,62 @@ class AbstractTrainer(ABC):
             logger.info(f"Starting {self.cfg.training.max_epochs} epochs...")
 
             # Training loop for this dataset
+            best_auroc = 0.0
+            patience_counter = 0
+            early_stopping_patience = getattr(self.cfg.training, 'early_stopping_patience', 10)
+
             for epoch in range(self.cfg.training.max_epochs):
                 self.epoch = epoch
-    
+
                 if torch.distributed.is_available() and torch.distributed.is_initialized():
                     torch.distributed.barrier()
 
                 self.train_epoch(train_loader, train_sampler)
 
-                self.eval_epoch([valid_loader], 'eval')
+                eval_metrics = self.eval_epoch([valid_loader], 'eval')
                 self.eval_epoch([test_loader], 'test')
 
-                # Save checkpoint
+                # Get current validation AUROC
+                current_auroc = 0.0
+                if get_is_master() and ds_name in eval_metrics:
+                    if eval_metrics[ds_name]['logits']:
+                        labels_all = torch.concat(eval_metrics[ds_name]['labels'], dim=0)
+                        logits_all = torch.concat(eval_metrics[ds_name]['logits'], dim=0)
+                        probs = torch.softmax(logits_all.float(), dim=1)[:, 1].numpy()
+                        labels_np = labels_all.numpy()
+                        try:
+                            current_auroc = roc_auc_score(labels_np, probs)
+                        except Exception:
+                            current_auroc = 0.0
+
+                # Early stopping — само на master процесот
+                if get_is_master():
+                    if current_auroc > best_auroc:
+                        best_auroc = current_auroc
+                        patience_counter = 0
+                        logger.info(f"New best val AUROC: {best_auroc:.4f} at epoch {epoch}")
+                        self.save_checkpoint(ds_name=ds_name)
+                    else:
+                        patience_counter += 1
+                        logger.info(f"No improvement. Patience: {patience_counter}/{early_stopping_patience}")
+
+                # Broadcast early stopping decision to all processes
+                should_stop = torch.tensor(
+                    1 if (get_is_master() and patience_counter >= early_stopping_patience) else 0,
+                    device=self.device
+                )
+                if torch.distributed.is_available() and torch.distributed.is_initialized():
+                    torch.distributed.broadcast(should_stop, src=0)
+
+                if should_stop.item() == 1:
+                    logger.info(f"Early stopping at epoch {epoch}!")
+                    break
+
+                # Save checkpoint at intervals
                 if (epoch + 1) % self.cfg.logging.ckpt_interval == 0:
                     self.save_checkpoint(ds_name=ds_name)
 
             self.save_checkpoint(ds_name, is_milestone=True)
-
             logger.info(f"Training completed for {ds_name}!")
 
             self.epoch = 0

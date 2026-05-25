@@ -198,17 +198,18 @@ class NeuroGPTModel(nn.Module):
         # GPT params
         embedding_dim: int = 1024,
         num_hidden_layers: int = 6,
-        num_attention_heads: int = 12,
+        num_attention_heads: int = 8,
         n_positions: int = 512,
         dropout: float = 0.1,
         # Input params
         num_chunks: int = 2,
-        chunk_len: int = 500,
+        chunk_len: int = 512,
         ft_only_encoder: bool = True,
     ):
         super().__init__()
         self.ds_name = ds_name
         self.num_chunks = num_chunks
+        self.chunk_len = chunk_len
         self.ft_only_encoder = ft_only_encoder
 
         # Encoder: EEGConformer
@@ -275,19 +276,21 @@ class NeuroGPTModel(nn.Module):
 
     def forward(self, batch):
         x = batch['data']           # (B, n_chans, T)
-        montage = batch['montage'][0]
+        montage = batch.get('montage', ['adhd/10_20'])[0]
         B, C, T = x.shape
 
         # Split into chunks: (B, num_chunks, n_chans, chunk_len)
-        chunks = x.unfold(-1, T // self.num_chunks, T // self.num_chunks)
+        #chunks = x.unfold(-1, T // self.num_chunks, T // self.num_chunks)
+        chunks = x.unfold(-1, self.chunk_len, self.chunk_len)
         # chunks: (B, n_chans, num_chunks, chunk_len) → (B, num_chunks, n_chans, chunk_len)
         chunks = chunks.permute(0, 2, 1, 3).contiguous()
 
         # Encode each chunk: (B*num_chunks, n_chans, chunk_len)
         B_chunks = B * self.num_chunks
-        x_chunks = chunks.view(B_chunks, C, T // self.num_chunks)
+        #x_chunks = chunks.view(B_chunks, C, T // self.num_chunks)
+        x_chunks = chunks.view(B_chunks, C, self.chunk_len)
         enc_out = self.encoder(x_chunks)        # (B*num_chunks, seq, emb)
-        enc_flat = enc_out.view(B_chunks, -1)   # (B*num_chunks, seq*emb)
+        enc_flat = enc_out.reshape(B_chunks, -1)   # (B*num_chunks, seq*emb)
 
         if self.ft_only_encoder:
             # Fine-tune only encoder — skip GPT
