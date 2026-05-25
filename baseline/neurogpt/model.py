@@ -264,15 +264,23 @@ class NeuroGPTModel(nn.Module):
         )
 
     def from_pretrained(self, pretrained_path: str):
-        """Load pretrained NeuroGPT weights."""
         import warnings
         pretrained = torch.load(pretrained_path, map_location='cpu', weights_only=False)
         current = self.state_dict()
-        for k in pretrained:
-            if k not in current:
+        
+        # Filter only matching keys with matching shapes
+        filtered = {}
+        for k, v in pretrained.items():
+            if k in current:
+                if current[k].shape == v.shape:
+                    filtered[k] = v
+                else:
+                    warnings.warn(f'Shape mismatch for {k}: {v.shape} vs {current[k].shape} — skipping')
+            else:
                 warnings.warn(f'Skipping {k} — not in current model')
-        self.load_state_dict(pretrained, strict=False)
-        logger.info(f"Loaded pretrained weights from {pretrained_path}")
+        
+        self.load_state_dict(filtered, strict=False)
+        logger.info(f"Loaded {len(filtered)}/{len(pretrained)} pretrained weights from {pretrained_path}")
 
     def forward(self, batch):
         x = batch['data']           # (B, n_chans, T)

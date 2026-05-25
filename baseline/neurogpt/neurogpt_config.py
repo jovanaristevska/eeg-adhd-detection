@@ -31,7 +31,7 @@ class NeuroGPTModelArgs(BaseModelArgs):
     # GPT (decoder) parameters
     num_hidden_layers: int = 6
     embedding_dim: int = 1024         # GPT embedding dimension
-    num_attention_heads: int = 12
+    num_attention_heads: int = 8
     n_positions: int = 512
     dropout: float = 0.1
 
