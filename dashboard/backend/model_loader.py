@@ -373,6 +373,37 @@ def load_eegnet(path: str):
         logger.error(f"Failed to load EEGNet: {e}")
         return None
 
+def load_neurogpt(path: str):
+    try:
+        sys.path.insert(0, 'D:/EEG-FM-Bench')
+        from baseline.neurogpt.model import NeuroGPTModel
+        
+        checkpoint = torch.load(path, map_location='cpu', weights_only=False)
+        state_dict = checkpoint.get('model_state_dict', checkpoint)
+        
+        model = NeuroGPTModel(
+            n_chans=19,
+            n_times=1024,
+            num_classes=2,
+            ds_name='adhd',
+            num_chunks=2,
+            chunk_len=500,
+            ft_only_encoder=True,
+        )
+        
+        # Strip DDP prefix
+        clean = {}
+        for k, v in state_dict.items():
+            key = k[7:] if k.startswith('module.') else k
+            clean[key] = v
+        
+        model.load_state_dict(clean, strict=False)
+        model.eval()
+        logger.info("NeuroGPT model loaded successfully")
+        return model
+    except Exception as e:
+        logger.error(f"Failed to load NeuroGPT: {e}")
+        return None
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 

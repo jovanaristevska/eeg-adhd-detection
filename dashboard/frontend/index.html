@@ -439,6 +439,7 @@
       <select id="model-select" onchange="onModelChange()">
         <option value="eegpt">EEG-GPT</option>
         <option value="eegnet">EEGNet</option>
+        <option value="neurogpt">NeuroGPT</option>
       </select>
       <div class="workflow-desc" id="model-desc">Pre-trained model loaded successfully.</div>
     </div>
@@ -531,6 +532,17 @@
           <div class="progress-bar-bg">
             <div class="progress-bar-fill bar-green" id="bar-eegnet" style="width:0%"></div>
           </div>
+        </div>
+
+        <div class="model-row">
+            <div class="model-row-header">
+                <span>NeuroGPT</span>
+                <span id="bar-neurogpt-pct">—</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="bar-neurogpt" 
+                    style="width:0%; background:#8b5cf6"></div>
+            </div>
         </div>
 
         <div class="compare-note">
@@ -811,15 +823,19 @@ function updateResults(data) {
       + data.windows_analyzed + ' analysis windows.';
 
   // Model comparison bars — use current model confidence + training metric for other
-  const eegptConf = data.model_used === 'eegpt'
+  /*const eegptConf = data.model_used === 'eegpt'
     ? data.confidence
     : (currentModelInfo ? currentModelInfo.accuracy * 100 : 87.3);
   const eegnetConf = data.model_used === 'eegnet'
     ? data.confidence
     : (currentModelInfo ? currentModelInfo.accuracy * 100 : 75.1);
+  const neurogptConf = data.model_used === 'neurogpt'
+    ? data.confidence
+    */
 
   setBar('eegpt', data.model_used === 'eegpt' ? data.confidence : 87.3);
   setBar('eegnet', data.model_used === 'eegnet' ? data.confidence : 75.1);
+  setBar('neurogpt', data.model_used === 'neurogpt' ? data.confidence : 75.7);
 
   // EEG chart
   currentEegSignal = data.eeg_signal;
@@ -948,6 +964,14 @@ const MODEL_DETAILS_META = {
     { icon: '📊', label: 'AUC-PR',           key: 'auc_pr',       fmt: v => v.toFixed(3) },
     { icon: '🔄', label: 'Training Epochs',  key: 'epochs',       fmt: v => v },
     { icon: '📦', label: 'Batch Size',       key: 'batch_size',   fmt: v => v },
+  ],
+  neurogpt: [
+    { icon: '🎯', label: 'Accuracy',       key: 'accuracy',     fmt: v => (v * 100).toFixed(1) + '%' },
+    { icon: '📈', label: 'AUROC',           key: 'auroc',        fmt: v => v.toFixed(3) },
+    { icon: '⚖️', label: 'Balanced Acc.',   key: 'balanced_acc', fmt: v => (v * 100).toFixed(1) + '%' },
+    { icon: '📊', label: 'AUC-PR',          key: 'auc_pr',       fmt: v => v.toFixed(3) },
+    { icon: '🔄', label: 'Training Epochs', key: 'epochs',       fmt: v => v },
+    { icon: '📦', label: 'Batch Size',      key: 'batch_size',   fmt: v => v },
   ],
 };
 

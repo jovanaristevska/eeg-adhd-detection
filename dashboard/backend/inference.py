@@ -4,6 +4,8 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+from baseline.moment import model
+
 logger = logging.getLogger(__name__)
 
 # Label mapping: index 0 = ADHD, index 1 = Control
@@ -61,9 +63,10 @@ class InferenceEngine:
         
         with torch.no_grad():
             if model_type == 'eegpt':
-                # EEGPT expects dict with 'data' key
-                batch = {'data': tensor}
+                batch = {'data': tensor * 0.001} 
                 output = model(batch)
+            elif model_type == 'neurogpt':
+                output = model({'data': tensor * 0.001})
             else:
                 # EEGNet expects tensor directly
                 output = model(tensor)

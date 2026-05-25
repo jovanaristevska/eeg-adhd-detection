@@ -75,7 +75,7 @@ training:
   max_epochs: 50
   weight_decay: 0.01
   max_grad_norm: 3.0
-
+    
   # Optimizer settings
   lr_schedule: "onecycle"  # 'onecycle' or 'cosine'
   max_lr: 5e-4

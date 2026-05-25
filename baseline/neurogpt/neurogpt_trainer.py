@@ -79,3 +79,5 @@ class NeuroGPTTrainer(ClassicalTrainer):
         )
 
         self.model = model
+        logger.info(f"NeuroGPT model setup complete for dataset: {ds_name}")
+        return model

@@ -13,7 +13,7 @@ BENCH_PATH = 'D:/EEG-FM-Bench'
 if BENCH_PATH not in sys.path:
     sys.path.insert(0, BENCH_PATH)
 
-from backend.model_loader import load_eegpt, load_eegnet
+from backend.model_loader import load_eegpt, load_eegnet, load_neurogpt
 from backend.preprocessor import PreprocessorPipeline
 from backend.inference import InferenceEngine
 
@@ -27,16 +27,21 @@ MODELS_DIR = os.path.join(BASE_DIR, 'models')
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 EEGPT_PATH = os.path.join(MODELS_DIR, 'eegpt_adhd_last.pt')
 EEGNET_PATH = os.path.join(MODELS_DIR, 'eegnet_adhd_last.pt')
+NEUROGPT_PATH = os.path.join(MODELS_DIR, 'neurogpt_adhd_last.pt')
 
 # ── model loading ─────────────────────────────────────────────────────────────
 logger.info("Loading models...")
 eegpt_model = load_eegpt(EEGPT_PATH) if os.path.exists(EEGPT_PATH) else None
 eegnet_model = load_eegnet(EEGNET_PATH) if os.path.exists(EEGNET_PATH) else None
+neurogpt_model = load_neurogpt(NEUROGPT_PATH) if os.path.exists(NEUROGPT_PATH) else None
+
 
 if eegpt_model is None:
     logger.warning("EEGPT model not loaded — running in MOCK mode for EEGPT")
 if eegnet_model is None:
     logger.warning("EEGNet model not loaded — running in MOCK mode for EEGNet")
+if neurogpt_model is None:
+    logger.warning("NeuroGPT model not loaded — running in MOCK mode for NeuroGPT")
 
 MOCK_MODE = eegpt_model is None and eegnet_model is None
 
@@ -64,6 +69,16 @@ MODEL_INFO = {
         'epochs': 50,
         'batch_size': 1024,
         'description': 'Lightweight CNN architecture for EEG classification',
+    },
+    'neurogpt': {
+    'name': 'NeuroGPT',
+    'accuracy': 0.757,
+    'auroc': 0.875,
+    'balanced_acc': 0.783,
+    'auc_pr': 0.854,
+    'epochs': 50,
+    'batch_size': 32,
+    'description': 'EEG Conformer + GPT foundation model',
     },
 }
 
@@ -112,9 +127,9 @@ async def predict(
     file: UploadFile = File(...),
     model_type: str = Form(...),
 ):
-    if model_type not in ('eegpt', 'eegnet'):
+    if model_type not in ('eegpt', 'eegnet', 'neurogpt'):
         raise HTTPException(status_code=400,
-                            detail=f"model_type must be 'eegpt' or 'eegnet', got '{model_type}'")
+                            detail=f"model_type must be 'eegpt', 'eegnet', or 'neurogpt', got '{model_type}'")
 
     # Save upload to a temp file
     suffix = os.path.splitext(file.filename or '.csv')[1] or '.csv'
@@ -139,7 +154,10 @@ async def predict(
         n_windows = preproc_result['n_windows']
 
         # Select model
-        model = eegpt_model if model_type == 'eegpt' else eegnet_model
+        model = eegpt_model if model_type == 'eegpt' else \
+                eegnet_model if model_type == 'eegnet' else \
+                neurogpt_model
+                
         mock_this = model is None
 
         # Run inference
