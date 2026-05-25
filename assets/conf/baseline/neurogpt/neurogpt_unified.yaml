@@ -77,4 +77,4 @@ logging:
   offline: false
   tags: ["neurogpt", "adhd", "finetune"]
   log_step_interval: 2
-  ckpt_interval: 10
+  ckpt_interval: 1
