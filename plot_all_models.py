@@ -9,21 +9,22 @@ import re
 # ============================================================
 MODELS = {
     'EEG-GPT': {
-        'log': r'D:\EEG-FM-Bench\assets\run\log\baseline\eegpt\eegpt_trainer.log',
+        'log': r'D:\EEG-FM-Bench\assets\run\log\baseline\eegpt\local_260525180037\eegpt_trainer.log',
         'color_val':  '#2196F3',
         'color_test': '#F44336',
     },
     'EEGNet': {
-        'log': r'D:\EEG-FM-Bench\assets\run\log\baseline\eegnet\local_260508121636\eegnet_trainer.log',
+        'log': r'D:\EEG-FM-Bench\assets\run\log\baseline\eegnet\local_260525134515\eegnet_trainer.log',
         'color_val':  '#4CAF50',
         'color_test': '#FF9800',
     },
     'Neuro-GPT': {
-        'log': r'D:\EEG-FM-Bench\assets\run\log\baseline\neurogpt\local_260518145627\neurogpt_trainer.log',
+        'log': r'D:\EEG-FM-Bench\assets\run\log\baseline\neurogpt\local_260525184145\neurogpt_trainer.log',
         'color_val':  '#9C27B0',
         'color_test': '#E91E63',
     },
 }
+
 
 # ============================================================
 # PARSE LOG FILE
