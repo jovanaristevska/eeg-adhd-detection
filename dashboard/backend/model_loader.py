@@ -390,7 +390,7 @@ def load_neurogpt(path: str):
             num_classes=2,
             ds_name='adhd',
             num_chunks=2,
-            chunk_len=500,
+            chunk_len=512,
             ft_only_encoder=True,
         )
         

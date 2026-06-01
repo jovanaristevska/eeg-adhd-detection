@@ -6,8 +6,8 @@ Local full-stack dashboard for EEG ADHD classification using EEG-GPT and EEGNet.
 
 ### 1. Copy model files
 ```
-dashboard/models/eegpt_unified_last.pt
-dashboard/models/eegnet_adhd_last.pt
+dashboard/models/eegpt_unified_epoch_6.pt
+dashboard/models/eegnet_adhd_epoch_10.pt
 ```
 If either file is missing the backend runs in **Mock Mode** for that model and returns
 realistic simulated predictions so the frontend still works.

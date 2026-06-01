@@ -36,7 +36,7 @@ class NeuroGPTModelArgs(BaseModelArgs):
     dropout: float = 0.1
 
     # Input parameters
-    chunk_len: int = 500              # window length in samples
+    chunk_len: int = 512              # window length in samples
     num_chunks: int = 2               # number of chunks
     chunk_ovlp: int = 0               # overlap between chunks
 
