@@ -1,4 +1,4 @@
-# EEG-FM-Bench
+# EEG-FM-Bench for ADHD detection
 
 > A reproducible benchmarking framework for comparing modern deep learning architectures on EEG-based ADHD classification, with support for both clinical 19-channel EEG (10-20 system) and the consumer Neurosity Crown 8-channel headset.
 
