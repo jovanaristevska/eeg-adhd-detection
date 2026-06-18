@@ -1,0 +1,289 @@
+/* ===========================
+   RESPONSIVE.CSS
+   Responsive rules only
+=========================== */
+
+/* ---------- Large screens ---------- */
+@media (max-width: 1200px) {
+  .main {
+    padding: 28px 30px 36px;
+  }
+
+  .result-grid,
+  .signal-row {
+    grid-template-columns: 1fr;
+  }
+
+  .models-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .about-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
+/* ---------- Tablets ---------- */
+@media (max-width: 900px) {
+  body {
+    display: block;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    transform: none;
+  }
+
+  .sidebar-logo {
+    padding: 18px 20px;
+  }
+
+  .nav {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .nav-section-label {
+    display: none;
+  }
+
+  .nav-item {
+    min-width: max-content;
+    border-left: none;
+    border-radius: 10px;
+    padding: 9px 14px;
+  }
+
+  .nav-item.active {
+    border-left: none;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .main {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 24px;
+  }
+
+  .page-header {
+    margin-bottom: 22px;
+  }
+
+  .page-header h1 {
+    font-size: 23px;
+  }
+
+  .patient-meta,
+  .summary-grid,
+  .ensemble-grid,
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-right,
+  .ensemble-right {
+    border-left: none;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .per-model-grid,
+  .stats-grid,
+  .history-stats {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .history-toolbar {
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* ---------- Small tablets / large phones ---------- */
+@media (max-width: 768px) {
+  .main {
+    padding: 20px;
+  }
+
+  .card,
+  .per-model-card,
+  .model-card,
+  .chart-card,
+  .history-card,
+  .stat-card,
+  .about-card,
+  .info-box {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .upload-hero,
+  .upload-zone {
+    padding: 30px 18px;
+  }
+
+  .upload-icon {
+    font-size: 42px;
+  }
+
+  .upload-title {
+    font-size: 18px;
+  }
+
+  .confidence-value {
+    font-size: 44px;
+  }
+
+  .model-score {
+    font-size: 34px;
+  }
+
+  .chart-wrapper {
+    min-height: 260px;
+  }
+
+  .band-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .band-value {
+    text-align: left;
+  }
+
+  .window-container {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
+
+  .compare-table,
+  .history-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .modal {
+    width: 92%;
+    padding: 24px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 480px) {
+  .main {
+    padding: 16px;
+  }
+
+  .page-header h1 {
+    font-size: 21px;
+  }
+
+  .page-header p {
+    font-size: 13px;
+  }
+
+  .nav {
+    padding: 8px;
+  }
+
+  .nav-item {
+    font-size: 12.5px;
+    padding: 8px 12px;
+  }
+
+  .card,
+  .per-model-card,
+  .model-card,
+  .chart-card,
+  .history-card,
+  .stat-card,
+  .about-card,
+  .info-box {
+    padding: 16px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 11px 16px;
+  }
+
+  .result-status-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .result-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+  }
+
+  .summary-left,
+  .summary-right,
+  .ensemble-left,
+  .ensemble-right {
+    padding: 20px;
+  }
+
+  .summary-dl {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .confidence-value {
+    font-size: 38px;
+  }
+
+  .prob-header,
+  .model-detail-row,
+  .model-confidence-label {
+    font-size: 12px;
+  }
+
+  .models-grid,
+  .per-model-grid,
+  .stats-grid,
+  .history-stats,
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .toast {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+  }
+
+  .modal {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .modal-title {
+    font-size: 19px;
+  }
+}
