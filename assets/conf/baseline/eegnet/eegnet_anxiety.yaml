@@ -10,7 +10,7 @@ multitask: false
 data:
   datasets:
     anxiety: 'finetune'           # ← Anxiety dataset instead of adhd
-  batch_size: 1024
+  batch_size: 32
   num_workers: 1
 
 # Model configuration
@@ -36,7 +36,7 @@ model:
 
 # Training configuration
 training:
-  max_epochs: 50
+  max_epochs: 20
   weight_decay: 0.01
   max_grad_norm: 3.0
 
